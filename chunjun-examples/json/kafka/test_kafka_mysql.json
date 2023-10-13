@@ -1,0 +1,87 @@
+{
+  "job": {
+    "content": [
+      {
+        "nameMapping": {
+          "columnMappings": {
+            "flink_realtime.sink": {
+              "name": "name",
+              "id": "id",
+              "create_time": "create_time"
+            }
+          },
+          "identifierMappings": {
+            "flink_realtime.sink": "flink_realtime.sink"
+          }
+        },
+        "reader": {
+          "parameter": {
+            "topic": "chunjun",
+            "mode": "earliest-offset",
+            "timestamp": 1000,
+            "offset": "earliest",
+            "codec": "json",
+            "addMessage" : false,
+            "column" : [
+              {
+                "name": "id",
+                "type": "int"
+              },
+              {
+                "name": "name",
+                "type": "varchar"
+              },
+              {
+                "name": "create_time",
+                "type": "varchar"
+              }
+            ],
+            "consumerSettings": {
+              "bootstrap.servers": "localhost:9092",
+              "auto.commit.enable": "true"
+            }
+          },
+          "name": "kafkasource"
+        },
+        "writer": {
+          "parameter": {
+            "password": "admin123456",
+            "connection": [
+              {
+                "jdbcUrl": "jdbc:mysql://localhost:3306/flink_realtime?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai",
+                "table" : [ "sink" ]
+              }
+            ],
+            "writeMode": "insert",
+            "column" : [
+              {
+                "name": "id",
+                "type": "int"
+              },
+              {
+                "name": "name",
+                "type": "varchar"
+              },
+              {
+                "name": "create_time",
+                "type": "varchar"
+              }
+            ],
+            "username": "root"
+          },
+          "name": "mysqlwriter"
+        }
+      }
+    ],
+    "setting": {
+      "restore": {
+        "isStream": true,
+        "isRestore": true
+      },
+      "speed": {
+        "readerChannel": 1,
+        "writerChannel": 1
+      }
+    }
+  }
+}

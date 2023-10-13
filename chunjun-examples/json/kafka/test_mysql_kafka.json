@@ -13,17 +13,21 @@
               {
                 "name": "name",
                 "type": "string"
+              },
+              {
+                "name": "create_time",
+                "type": "string"
               }
             ],
             "username": "root",
-            "password": "Uniplore!@#123",
+            "password": "admin123456",
             "connection": [
               {
                 "jdbcUrl": [
-                  "jdbc:mysql://localhost:3306/demo?useSSL=false"
+                  "jdbc:mysql://localhost:3306/flink_realtime?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai"
                 ],
                 "table": [
-                  "sync_ods"
+                  "source"
                 ]
               }
             ]
@@ -34,9 +38,10 @@
           "parameter": {
             "tableFields": [
               "id",
-              "raw_date"
+              "name",
+              "create_time"
             ],
-            "topic": "cx",
+            "topic": "chunjun",
             "producerSettings": {
               "auto.commit.enable": "false",
               "bootstrap.servers": "localhost:9092"

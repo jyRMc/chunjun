@@ -1,0 +1,49 @@
+{
+  "job": {
+    "content": [
+      {
+        "reader": {
+          "name": "binlogreader",
+          "parameter": {
+            "schema": "flink_realtime",
+            "table": ["flink_realtime.source"],
+            "database": "flink_realtime",
+            "username": "root",
+            "password": "admin123456",
+            "cat" : "insert,delete,update",
+            "jdbcUrl": "jdbc:mysql://localhost:3306/flink_realtime?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai",
+            "host": "localhost",
+            "port": 3306,
+            "splitUpdate" : true,
+            "pavingData" : true
+          }
+        },
+        "writer": {
+          "name": "kafkasink",
+          "parameter": {
+            "tableFields": [
+              "id",
+              "name",
+              "create_time"
+            ],
+            "topic": "chunjun",
+            "producerSettings": {
+              "auto.commit.enable": "true",
+              "bootstrap.servers": "localhost:9092"
+            }
+          }
+        }
+      }
+    ],
+    "setting": {
+      "restore": {
+        "isRestore": true,
+        "isStream": true
+      },
+      "speed": {
+        "readerChannel": 1,
+        "writerChannel": 1
+      }
+    }
+  }
+}
