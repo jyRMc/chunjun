@@ -27,7 +27,6 @@ import com.dtstack.chunjun.element.ErrorMsgRowData;
 
 import org.apache.flink.table.data.RowData;
 
-import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 import org.postgresql.jdbc.PgConnection;
@@ -37,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +86,6 @@ public class PGDataProcessor implements DataProcessor<RowData> {
 
     @Override
     public List<RowData> processException(Exception e) {
-        return Lists.newArrayList(new ErrorMsgRowData(e.getMessage()));
+        return Collections.singletonList(new ErrorMsgRowData(e.getMessage()));
     }
 }

@@ -49,7 +49,6 @@ import org.apache.flink.table.types.logical.utils.LogicalTypeParser;
 import org.apache.flink.table.types.utils.TypeConversions;
 import org.apache.flink.types.RowKind;
 
-import com.google.common.collect.Lists;
 import org.postgresql.jdbc.PgSQLXML;
 
 import java.lang.reflect.TypeVariable;
@@ -60,6 +59,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -91,15 +91,15 @@ public class PGWalColumnConverter extends AbstractCDCRowConverter<ChangeLog, Log
                 new GenericLogicalType<java.util.UUID>(
                         true,
                         "uuid",
-                        Lists.newArrayList(UUID.class, String.class),
-                        Lists.newArrayList(String.class)));
+                        Arrays.asList(UUID.class, String.class),
+                        Collections.singletonList(String.class)));
         registered.put(
                 "xml",
                 new GenericLogicalType<PgSQLXML>(
                         true,
                         "xml",
-                        Lists.newArrayList(PgSQLXML.class, String.class),
-                        Lists.newArrayList(String.class)));
+                        Arrays.asList(PgSQLXML.class, String.class),
+                        Collections.singletonList(String.class)));
     }
 
     public PGWalColumnConverter(boolean pavingData, boolean splitUpdate) {
@@ -233,7 +233,9 @@ public class PGWalColumnConverter extends AbstractCDCRowConverter<ChangeLog, Log
         typeMapping.put("numeric", DataTypes.DECIMAL(10, 10)); // TEST
 
         // phase 2, need more information to parse
-        if (typeMapping.containsKey(type)) return typeMapping.get(type);
+        if (typeMapping.containsKey(type)) {
+            return typeMapping.get(type);
+        }
 
         /**
          * typeMapping.put("char(1)", DataTypes.CHAR()); typeMapping.put("varchar",
@@ -243,7 +245,7 @@ public class PGWalColumnConverter extends AbstractCDCRowConverter<ChangeLog, Log
          * typeMapping.put("bit", DataTypes.BINARY());
          */
         List<String> needMoreInfo =
-                Lists.newArrayList("char", "varchar", "bytea", "text", "numeric");
+                Arrays.asList("char", "varchar", "bytea", "text", "numeric");
         if (needMoreInfo.contains(type)) {
             return DataTypeFactory.getDataType(type);
         }

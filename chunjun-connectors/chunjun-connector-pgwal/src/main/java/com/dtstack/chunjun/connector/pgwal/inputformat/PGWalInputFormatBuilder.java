@@ -24,14 +24,14 @@ import com.dtstack.chunjun.source.format.BaseRichInputFormatBuilder;
 import com.dtstack.chunjun.util.ClassUtil;
 import com.dtstack.chunjun.util.GsonUtil;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /** */
 public class PGWalInputFormatBuilder extends BaseRichInputFormatBuilder<PGWalInputFormat> {
@@ -67,8 +67,12 @@ public class PGWalInputFormatBuilder extends BaseRichInputFormatBuilder<PGWalInp
         }
 
         if (StringUtils.isNotEmpty(conf.getCat())) {
-            HashSet<String> set = Sets.newHashSet("INSERT", "UPDATE", "DELETE");
-            List<String> cats = Lists.newArrayList(conf.getCat().toUpperCase().split(","));
+            Set<String> set = new HashSet<>();
+            set.add("INSERT");
+            set.add("UPDATE");
+            set.add("DELETE");
+
+            List<String> cats = Arrays.asList(conf.getCat().toUpperCase().split(","));
             cats.removeIf(s -> set.contains(s.toUpperCase(Locale.ENGLISH)));
             if (CollectionUtils.isNotEmpty(cats)) {
                 sb.append("binlog cat not support-> ")

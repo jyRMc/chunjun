@@ -21,11 +21,10 @@ package com.dtstack.chunjun.connector.pgwal.conf;
 import com.dtstack.chunjun.conf.ChunJunCommonConf;
 import com.dtstack.chunjun.conf.FieldConf;
 
+import org.apache.commons.lang3.StringUtils;
+
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.annotation.JsonProperty;
-
-import com.google.common.base.Preconditions;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,8 +63,9 @@ public class PGWalConf extends ChunJunCommonConf {
     private boolean slotAvailable;
 
     public void setCredentials(String username, String password) {
-        Preconditions.checkArgument(
-                StringUtils.isNotEmpty(username), "user name should not be empty");
+        if (StringUtils.isBlank(username)) {
+            throw new IllegalArgumentException("user name should not be empty");
+        }
         this.username = username;
         this.password = password;
     }
@@ -76,7 +76,9 @@ public class PGWalConf extends ChunJunCommonConf {
     }
 
     public void setSlotAttribute(String slotName, Boolean allowCreated, Boolean isTemp) {
-        Preconditions.checkArgument(StringUtils.isNotEmpty(slotName), "slot name cannot be empty");
+        if (StringUtils.isBlank(slotName)) {
+            throw new IllegalArgumentException("slot name should not be empty");
+        }
         this.slotName = slotName;
         this.allowCreated = allowCreated;
         this.isTemp = isTemp;
@@ -99,7 +101,9 @@ public class PGWalConf extends ChunJunCommonConf {
     }
 
     public void setJdbcUrl(String url) {
-        Preconditions.checkArgument(StringUtils.isNotEmpty(url), "url should not be empty");
+        if (StringUtils.isNotEmpty(url)) {
+            throw new IllegalArgumentException("url should not be empty");
+        }
         this.jdbcUrl = url;
     }
 
@@ -120,7 +124,9 @@ public class PGWalConf extends ChunJunCommonConf {
     }
 
     public List<String> getSimpleTables() {
-        if (tables == null) return new ArrayList<>();
+        if (tables == null) {
+            return new ArrayList<>();
+        }
 
         return tables.stream()
                 .map(
@@ -156,7 +162,9 @@ public class PGWalConf extends ChunJunCommonConf {
     }
 
     public void setStatusInterval(Integer statusInterval) {
-        Preconditions.checkArgument(statusInterval >= 0, "status interval is not negative");
+        if (statusInterval == null || statusInterval < 0) {
+            throw new IllegalArgumentException("status interval is not negative");
+        }
         this.statusInterval = statusInterval;
     }
 
@@ -165,7 +173,9 @@ public class PGWalConf extends ChunJunCommonConf {
     }
 
     public void setLsn(Long lsn) {
-        Preconditions.checkArgument(lsn >= 0, "lsn is not negative");
+        if (lsn == null ||  lsn < 0) {
+            throw new IllegalArgumentException("lsn is not negative");
+        }
         this.lsn = lsn;
     }
 

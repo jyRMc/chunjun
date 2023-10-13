@@ -35,8 +35,6 @@ import org.apache.flink.table.runtime.typeutils.InternalTypeInfo;
 import org.apache.flink.table.types.logical.RowType;
 import org.apache.flink.types.RowKind;
 
-import com.google.common.base.Preconditions;
-
 /** */
 public class PGWalDynamicTableSource implements ScanTableSource {
     private final TableSchema schema;
@@ -52,9 +50,9 @@ public class PGWalDynamicTableSource implements ScanTableSource {
 
     @Override
     public ScanRuntimeProvider getScanRuntimeProvider(ScanContext runtimeProviderContext) {
-        Preconditions.checkArgument(
-                schema.toRowDataType().getLogicalType() instanceof RowType,
-                "schema cannot cast to RowType");
+        if (!(schema.toRowDataType().getLogicalType() instanceof RowType)) {
+            throw new UnsupportedOperationException("schema cannot cast to RowType");
+        }
         final RowType rowType = (RowType) schema.toRowDataType().getLogicalType();
         TypeInformation<RowData> typeInformation = InternalTypeInfo.of(rowType);
 
